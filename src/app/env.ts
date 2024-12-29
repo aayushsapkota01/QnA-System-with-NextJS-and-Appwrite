@@ -1,11 +1,9 @@
-const env = {
-  appewrite: {
-    endpoint: String(process.env.NEXT_PUBLIC_APPWRITE_HOST_URL),
+ const env = {
+   appwrite: {
+     endpoint: process.env.NEXT_PUBLIC_APPWRITE_HOST_URL || "",
+     projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || "",
+     apikey: process.env.APPWRITE_API_KEY || "", // Ensure this is only used server-side
+   },
+ };
 
-    projectId: String(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID),
-
-    apikey: String(process.env.APPWRITE_API_KEY),
-  },
-};
-
-export default env;
+ export default env;

@@ -1,34 +1,34 @@
-import { db } from "../name";
-import createAnswerCollection from "./answer.collection";
-import createCommentCollection from "./comment.collection";
-import createQuestionCollection from "./question.collection";
-import createVoteCollection from "./vote.collection";
+ import { db } from "../name";
+ import createAnswerCollection from "./answer.collection";
+ import createCommentCollection from "./comment.collection";
+ import createQuestionCollection from "./question.collection";
+ import createVoteCollection from "./vote.collection";
 
-import { databases } from "./config";
+ import { databases } from "./config";
 
-export default async function getOrCreateDB() {
-  try {
-    await databases.get(db);
-    console.log("database connected");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    try {
-      await databases.create(db, db);
-      console.log("database created");
+ export default async function getOrCreateDB() {
+   try {
+     // Check if the database exists
+     await databases.get(db);
+     console.log("Database connected");
+   } catch (error) {
+     // If database doesn't exist, create it
+     try {
+       await databases.create(db, db);
+       console.log("Database created");
 
-      // Create Collections
-      await Promise.all([
-        createAnswerCollection,
-        createCommentCollection,
-        createQuestionCollection,
-        createVoteCollection,
-      ]);
-      console.log("Collection created successfully");
-      console.log("Database Connected!");
-    } catch (error) {
-      console.log("Error while creating databases and collection", error);
-    }
-  }
+       // Create collections only once after the database is created
+       await Promise.all([
+         createQuestionCollection(),
+         createAnswerCollection(),
+         createCommentCollection(),
+         createVoteCollection(),
+       ]);
+       console.log("Collections created");
+     } catch (error) {
+       console.error("Error creating database or collections", error);
+     }
+   }
 
-  return databases;
-}
+   return databases; // Return the database connection (this should be the same instance)
+ }
